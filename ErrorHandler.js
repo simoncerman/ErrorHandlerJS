@@ -1,14 +1,10 @@
 class ErrorHandler {
-  constructor(url, level = "all") {
+  constructor(url, level) {
     this.url = url;
-    if (level == "none") return;
-    this.bindLog();
-    if (level == "log") return;
-    this.bindDebugs();
-    if (level == "debug") return;
-    this.bindWarnings();
-    if (level == "warning") return;
-    this.bindError();
+    if (level["log"]) this.bindLog();
+    if (level["debug"]) this.bindDebugs();
+    if (level["warning"]) this.bindWarnings();
+    if (level["error"]) this.bindError();
   }
   bindLog() {
     console.defaultLog = console.log.bind(console);
@@ -62,4 +58,9 @@ class ErrorHandler {
   }
 }
 //level none->log->debug->warning->all
-let ErrorHandlingJS = new ErrorHandler("uri", "log");
+let ErrorHandlingJS = new ErrorHandler("uri", {
+  log: false,
+  debug: false,
+  warning: false,
+  error: true,
+});
