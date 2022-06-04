@@ -49,18 +49,21 @@ class ErrorHandler {
   ajaxData(error) {
     $.ajax({
       type: "POST",
-      url: this.url,
+      url: "ErrorSaver.php",
       data: { error: error },
-      /*success: function(msg){
-            alert("delivered to server " + msg);
-        }*/
+      success: function (msg) {
+        //alert("delivered to server " + msg);
+      },
+      error: (err) => {
+        //alert(err);
+      },
     });
   }
 }
 //level none->log->debug->warning->all
 let ErrorHandlingJS = new ErrorHandler("uri", {
-  log: false,
-  debug: false,
-  warning: false,
+  log: true,
+  debug: true,
+  warning: true,
   error: true,
 });
