@@ -17,6 +17,7 @@ class ErrorHandler {
     };
   }
   bindError() {
+    //handling default errors
     console.defaultError = console.error.bind(console);
     console.errors = [];
     console.error = function () {
@@ -25,6 +26,11 @@ class ErrorHandler {
       //alert("ERR");
       ErrorHandlingJS.ajaxData(arguments);
     };
+    //handling all errors
+    window.onerror = function(msg, url, line, col, error){
+      let errrorString = msg +" "+ url +" line:"+ line +" col:"+ col +" "+ error;
+      ErrorHandlingJS.ajaxData(errrorString);
+    }
   }
   bindWarnings() {
     console.defaultWarn = console.warn.bind(console);
@@ -55,7 +61,7 @@ class ErrorHandler {
         //alert("delivered to server " + msg);
       },
       error: (err) => {
-        //alert(err);
+        //alert("error handling service is not working");
       },
     });
   }
