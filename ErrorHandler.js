@@ -27,10 +27,11 @@ class ErrorHandler {
       ErrorHandlingJS.ajaxData(arguments);
     };
     //handling all errors
-    window.onerror = function(msg, url, line, col, error){
-      let errrorString = msg +" "+ url +" line:"+ line +" col:"+ col +" "+ error;
+    window.onerror = function (msg, url, line, col, error) {
+      let errrorString =
+        msg + " " + url + " line:" + line + " col:" + col + " " + error;
       ErrorHandlingJS.ajaxData(errrorString);
-    }
+    };
   }
   bindWarnings() {
     console.defaultWarn = console.warn.bind(console);
@@ -53,6 +54,7 @@ class ErrorHandler {
     };
   }
   ajaxData(error) {
+    let useUrl = this.url == "uri" ? "ErrorSaver.php" : this.url;
     $.ajax({
       type: "POST",
       url: "ErrorSaver.php",

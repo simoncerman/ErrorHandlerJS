@@ -1,4 +1,0 @@
-Log
-deb
-Warn
-Error
