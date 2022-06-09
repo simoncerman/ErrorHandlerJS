@@ -6,18 +6,7 @@ class ErrorHandler {
     if (level["warning"]) this.bindWarnings();
     if (level["error"]) this.bindError();
   }
-  bindLog() {
-    console.defaultLog = console.log.bind(console);
-    console.logs = [];
-    console.log = function () {
-      console.defaultLog.apply(console, arguments);
-      console.logs.push(Array.from(arguments));
-      //alert("L0G");
-      ErrorHandlingJS.ajaxData(arguments);
-    };
-  }
   bindError() {
-    //handling default errors
     console.defaultError = console.error.bind(console);
     console.errors = [];
     console.error = function () {
@@ -33,14 +22,22 @@ class ErrorHandler {
       ErrorHandlingJS.ajaxData(errrorString);
     };
   }
+  bindLog() {
+    console.defaultLog = console.log.bind(console);
+    console.logs = [];
+    console.log = function () {
+      console.defaultLog.apply(console, arguments);
+      console.logs.push(Array.from(arguments));
+      ErrorHandlingJS.ajaxData(arguments[0]);
+    };
+  }
   bindWarnings() {
     console.defaultWarn = console.warn.bind(console);
     console.warns = [];
     console.warn = function () {
       console.defaultWarn.apply(console, arguments);
       console.warns.push(Array.from(arguments));
-      //alert("WAR");
-      ErrorHandlingJS.ajaxData(arguments);
+      ErrorHandlingJS.ajaxData(arguments[0]);
     };
   }
   bindDebugs() {
@@ -49,22 +46,15 @@ class ErrorHandler {
     console.debug = function () {
       console.defaultDebug.apply(console, arguments);
       console.debugs.push(Array.from(arguments));
-      //alert("DBG");
-      ErrorHandlingJS.ajaxData(arguments);
+      ErrorHandlingJS.ajaxData(arguments[0]);
     };
   }
   ajaxData(error) {
     let useUrl = this.url == "uri" ? "ErrorSaver.php" : this.url;
     $.ajax({
       type: "POST",
-      url: "ErrorSaver.php",
+      url: useUrl,
       data: { error: error },
-      success: function (msg) {
-        //alert("delivered to server " + msg);
-      },
-      error: (err) => {
-        //alert("error handling service is not working");
-      },
     });
   }
 }
