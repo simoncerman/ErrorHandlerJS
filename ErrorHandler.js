@@ -13,7 +13,7 @@ class ErrorHandler {
     console.error = function () {
       console.defaultError.apply(console, arguments);
       console.errors.push(Array.from(arguments));
-      ErrorHandlingJS.ajaxData(arguments);
+      ErrorHandlingJS.ajaxData(arguments[0]);
     };
     //handling all other errors which are not handled by console
     window.onerror = function (msg, url, line, col, error) {
