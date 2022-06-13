@@ -7,15 +7,15 @@ class ErrorHandler {
     if (level["error"]) this.bindError();
   }
   bindError() {
+    //console.error() handling
     console.defaultError = console.error.bind(console);
     console.errors = [];
     console.error = function () {
       console.defaultError.apply(console, arguments);
       console.errors.push(Array.from(arguments));
-      //alert("ERR");
       ErrorHandlingJS.ajaxData(arguments);
     };
-    //handling all errors
+    //handling all other errors which are not handled by console
     window.onerror = function (msg, url, line, col, error) {
       let errrorString =
         msg + " " + url + " line:" + line + " col:" + col + " " + error;
@@ -23,6 +23,7 @@ class ErrorHandler {
     };
   }
   bindLog() {
+    //console.log() handling
     console.defaultLog = console.log.bind(console);
     console.logs = [];
     console.log = function () {
@@ -32,6 +33,7 @@ class ErrorHandler {
     };
   }
   bindWarnings() {
+    //console.warn() handling
     console.defaultWarn = console.warn.bind(console);
     console.warns = [];
     console.warn = function () {
@@ -41,6 +43,7 @@ class ErrorHandler {
     };
   }
   bindDebugs() {
+    //console.debug() handling
     console.defaultDebug = console.debug.bind(console);
     console.debugs = [];
     console.debug = function () {
@@ -49,7 +52,12 @@ class ErrorHandler {
       ErrorHandlingJS.ajaxData(arguments[0]);
     };
   }
+  /**
+   * Sending string to url which is set in constructor
+   * @param {string} error 
+   */
   ajaxData(error) {
+    //ErrorSaver.php works for debuging this programm
     let useUrl = this.url == "uri" ? "ErrorSaver.php" : this.url;
     $.ajax({
       type: "POST",
