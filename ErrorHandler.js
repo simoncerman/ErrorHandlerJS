@@ -17,11 +17,11 @@ class ErrorHandler {
     console.defaults[type] = consoleFunction.bind(console);
     return function(){
       console.defaults[type].apply(console,arguments);
-      console.editDat.push(Array.from(arguments));
+      console.editDat[type].push(Array.from(arguments));
       ErrorHandlingJS.ajaxData(arguments[0]);
     }
   }
-  
+
   bindFatal() {
     //handling all other errors which are not handled by console
     window.onerror = function (msg, url, line, col, error) {
