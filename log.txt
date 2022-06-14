@@ -1,0 +1,6 @@
+Uncaught ReferenceError: asdasd is not defined http://localhost/ErrorHandlerJS/script.js line:10 col:1 ReferenceError: asdasd is not defined
+Log
+deb
+Warn
+
+Uncaught ReferenceError: asdasd is not defined http://localhost/ErrorHandlerJS/script.js line:10 col:1 ReferenceError: asdasd is not defined

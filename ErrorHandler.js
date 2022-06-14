@@ -1,20 +1,28 @@
 class ErrorHandler {
   constructor(url, level) {
     this.url = url;
-    if (level["log"]) this.bindLog();
-    if (level["debug"]) this.bindDebugs();
-    if (level["warning"]) this.bindWarnings();
-    if (level["error"]) this.bindError();
+    this.bindPrepare(); //prepare console
+    if (level["CONSOL_log"]) console.log = this.bindHandler(console.log, 0);
+    if (level["CONSOL_debug"]) console.debug = this.bindHandler(console.debug, 1);
+    if (level["CONSOL_warning"]) console.warn = this.bindHandler(console.warn, 2)
+    if (level["CONSOL_error"]) console.error = this.bindHandler(console.error, 3);
+    if (level["FATAL_error"]) this.bindFatal();
   }
-  bindError() {
-    //console.error() handling
-    console.defaultError = console.error.bind(console);
-    console.errors = [];
-    console.error = function () {
-      console.defaultError.apply(console, arguments);
-      console.errors.push(Array.from(arguments));
+
+  bindPrepare() {
+    console.editDat = [[], [], [], []];
+    console.defaults = [null, null, null, null];
+  }
+  bindHandler(consoleFunction, type) {
+    console.defaults[type] = consoleFunction.bind(console);
+    return function(){
+      console.defaults[type].apply(console,arguments);
+      console.editDat.push(Array.from(arguments));
       ErrorHandlingJS.ajaxData(arguments[0]);
-    };
+    }
+  }
+  
+  bindFatal() {
     //handling all other errors which are not handled by console
     window.onerror = function (msg, url, line, col, error) {
       let errrorString =
@@ -22,42 +30,8 @@ class ErrorHandler {
       ErrorHandlingJS.ajaxData(errrorString);
     };
   }
-  bindLog() {
-    //console.log() handling
-    console.defaultLog = console.log.bind(console);
-    console.logs = [];
-    console.log = function () {
-      console.defaultLog.apply(console, arguments);
-      console.logs.push(Array.from(arguments));
-      ErrorHandlingJS.ajaxData(arguments[0]);
-    };
-  }
-  bindWarnings() {
-    //console.warn() handling
-    console.defaultWarn = console.warn.bind(console);
-    console.warns = [];
-    console.warn = function () {
-      console.defaultWarn.apply(console, arguments);
-      console.warns.push(Array.from(arguments));
-      ErrorHandlingJS.ajaxData(arguments[0]);
-    };
-  }
-  bindDebugs() {
-    //console.debug() handling
-    console.defaultDebug = console.debug.bind(console);
-    console.debugs = [];
-    console.debug = function () {
-      console.defaultDebug.apply(console, arguments);
-      console.debugs.push(Array.from(arguments));
-      ErrorHandlingJS.ajaxData(arguments[0]);
-    };
-  }
-  /**
-   * Sending string to url which is set in constructor
-   * @param {string} error 
-   */
+
   ajaxData(error) {
-    //ErrorSaver.php works for debuging this programm
     let useUrl = this.url == "uri" ? "ErrorSaver.php" : this.url;
     $.ajax({
       type: "POST",
@@ -68,8 +42,9 @@ class ErrorHandler {
 }
 //level none->log->debug->warning->all
 let ErrorHandlingJS = new ErrorHandler("uri", {
-  log: true,
-  debug: true,
-  warning: true,
-  error: true,
+  CONSOL_log: true,
+  CONSOL_debug: true,
+  CONSOL_warning: true,
+  CONSOL_error: true,
+  FATAL_error: true
 });
